@@ -1,0 +1,88 @@
+{% load static %}
+<!-- Sidebar -->
+<ul
+  class="navbar-nav bg-gradient-danger sidebar sidebar-dark accordion"
+  id="accordionSidebar"
+>
+  <!-- Sidebar - Brand -->
+  <a
+    class="sidebar-brand d-flex align-items-center justify-content-center"
+    href="/home"
+  >
+    <div class="sidebar-brand-icon">
+      <img
+        src="{% static 'polls/images/LogogroupeCentaure.png' %}"
+        alt="logo"
+        style="width: 120px;
+height: 50px;"
+      />
+    </div>
+    <!--<div class="sidebar-brand-text mx-3">Admin <sup>2</sup></div>-->
+  </a>
+
+  <!-- Divider -->
+  <hr class="sidebar-divider my-0" />
+
+  <!-- Nav Item - Dashboard -->
+  <li class="nav-item active">
+    <a class="nav-link" href="/home">
+      <i class="fas fa-fw fa-tachometer-alt"></i>
+      <span>Accueil</span></a
+    >
+  </li>
+
+<!-- Nav Item - Tables -->
+  <li class="nav-item">
+    <a class="nav-link" href="{%url 'create-fee-request'%}">
+      <i class="fa fa-plus" aria-hidden="true"></i>
+      <span>Faire ma demande</span></a
+    >
+  </li>
+{% if user.is_staff %}
+ <!-- Nav Item - Tables -->
+  <li class="nav-item">
+    <a class="nav-link" href="/admin-demandes">
+      <i class="fa fa-pen" aria-hidden="true"></i>
+      <span>Traitement Niveau 1</span></a
+    >
+  </li>
+  {% endif %}
+  {% if user.is_superuser and user.is_staff %}
+ <!-- Nav Item - Tables -->
+  <li class="nav-item">
+    <a class="nav-link" href="/admin2-demandes">
+      <i class="fa fa-pen" aria-hidden="true"></i>
+      <span>Traitement Niveau 2</span></a
+    >
+  </li>
+  {% endif %}
+ <!-- Nav Item - Tables -->
+  <li class="nav-item">
+    <a class="nav-link" href="/demandes">
+      <i class="fas fa-fw fa-table"></i>
+      <span>Suivi des demandes</span></a
+    >
+  </li>
+{%if user.is_superuser%}
+  <!-- Nav Item - Charts -->
+  <li class="nav-item">
+    <a class="nav-link" href="/admin">
+      <i class="fas fa-fw fa-cogs"></i>
+      <span>Paramètre</span></a>
+  </li>
+{%endif%}
+  
+
+  
+
+  
+
+  <!-- Divider -->
+  <hr class="sidebar-divider d-none d-md-block" />
+
+  <!-- Sidebar Toggler (Sidebar) -->
+  <div class="text-center d-none d-md-inline">
+    <button class="rounded-circle border-0" id="sidebarToggle"></button>
+  </div>
+</ul>
+<!-- End of Sidebar -->

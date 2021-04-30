@@ -1,0 +1,96 @@
+{% extends 'core/base.html' %} {% block content %}
+
+<!-- Page Heading -->
+<div class="row">
+  <div class="col-md-8  ">
+    <h1 class="h3 mb-2 text-gray-800">Les demandes de frais d'exploitation</h1>
+    <p class="mb-4">....</p>
+  </div>
+  <div class="col-md-4">
+    <br />
+    <a href="{%url 'dtraite'%}">
+      <button class="btn btn-danger" type="button">
+        Les demandes Validées
+      </button>
+    </a>
+  </div>
+  
+</div>
+
+<!-- DataTales Example -->
+<div class="card shadow mb-4">
+  <div class="card-header py-3">
+    <h6 class="m-0 font-weight-bold text-danger">Suivi de frais chauffeurs.</h6>
+  </div>
+  <div class="card-body">
+    <div class="table-responsive">
+      <table
+        class="table table-bordered"
+        id="dataTable"
+        width="100%"
+        cellspacing="0"
+      >
+        <thead>
+          <tr>
+            <th>Date demande</th>
+            <th>Numéro relevé</th>
+            <th>Demandeur</th>
+            <th>Code Activité</th>
+            <!--  <th>Libelle</th>-->
+
+            <th>Total</th>
+
+            <th>Statut</th>
+
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for item in query_results %} {% if user.username == item.user.username %}
+          <tr>
+            <td>{{ item.timestamp }}</td>
+            <td>{{ item.id }}</td>
+            <td>{{ item.user }}</td>
+            <td>{{ item.activity }}</td>
+            <!--<td>{{ item.libelle_activite }}</td>-->
+
+            <td>{{ auther_request.get_total_price }}</td>
+
+            {% if item.refused == True %}
+            <td class="text-danger">Refusée</td>
+            <td><i class="fa fa-ban" aria-hidden="true"></i></td>
+            {% elif item.en_attente == True %}
+            <td class="text-danger">En attente</td>
+            <td><i class="fa fa-ban" aria-hidden="true"></i></td>
+            {% else%}
+            <td class="text-success">Validée</td>
+            <td>
+            
+              <a href="pdf/{{item.id}}">
+                <button
+                  class="btn btn-success"
+                  type="button"
+                  value="{{ item.id }}"
+                >
+                  <i class="fa fa-download" aria-hidden="true">Telecharger</i>
+                </button>
+              </a>
+            </td>
+            {% endif %}
+            {% endif %}
+            
+          </tr>
+      {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+<script>
+    jQuery(document).ready(function($) {
+    $(".clickable-row").click(function() {
+        window.location = $(this).data("href");
+    });
+});
+</script>
+{% endblock %}

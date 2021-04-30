@@ -1,0 +1,32 @@
+{% extends 'core/base.html' %}
+{% block content %}
+
+          <!-- Page Heading -->
+          <h1 class="h3 mb-2 text-gray-800">Rapport Temps réel</h1>
+          
+
+          <!-- Content Row -->
+          <div class="row">
+
+            <div class="col-md-12">
+
+              <!-- Area Chart -->
+              <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                  <h6 class="m-0 font-weight-bold text-danger">Graphe d'évolution frais chauffeurs.</h6>
+                </div>
+                <div class="card-body">
+                  <div class="chart-area">
+                    <div id="chart-1">{{ output|safe }}</div>
+                  </div>
+                  
+                </div>
+              </div>
+            </div>
+
+            
+            
+          </div>
+          
+
+{% endblock %}

@@ -1,0 +1,93 @@
+{% extends 'core/base.html' %}
+
+
+
+
+
+
+          {% block content %}
+
+          <!-- Page Heading -->
+          <div class="d-sm-flex align-items-center justify-content-between mb-4">
+            <h1 class="h3 mb-0 text-gray-800">Tableau de bord</h1>
+            
+          </div>
+
+          <!-- Content Row -->
+          <div class="row">
+
+            <!-- Earnings (Monthly) Card Example -->
+            <div class="col-xl-6 col-md-12 mb-8">
+              <div class="card border-left-info shadow h-100 py-2">
+                <div class="card-body">
+                  <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                      <div class="text-xs font-weight-bold text-info text-uppercase mb-1">Demandes non traitées  </div>
+                      <div class="h5 mb-0 font-weight-bold text-gray-800">{{ nb_dmd }}</div>
+                    </div>
+                    <div class="col-auto">
+                      <i class="fas fa-car fa-2x text-gray-300"></i>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <br/>
+            
+            <!-- Earnings (Monthly) Card Example -->
+            <div class="col-xl-6 col-md-12 mb-8">
+              <div class="card border-left-danger shadow h-100 py-2">
+                <div class="card-body">
+                  <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                      <div class="text-xs font-weight-bold text-danger text-uppercase mb-1">Demandes refusées</div>
+                      <div class="h5 mb-0 font-weight-bold text-gray-800">{{ nb_dmds }}</div>
+                    </div>
+                    <div class="col-auto">
+                      <i class="fas fa-exclamation-triangle fa-2x text-gray-300"></i>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+        </div>
+        <br>
+        <div class="row">
+
+            <!-- Earnings (Monthly) Card Example -->
+            <div class="col-xl-6 col-md-12 mb-8">
+              <div class="card border-left-success shadow h-100 py-2">
+                <div class="card-body">
+                  <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                      <div class="text-xs font-weight-bold text-success text-uppercase mb-1">Demandes frais chauffeur validées</div>
+                      <div class="row no-gutters align-items-center">
+                        <div class="col-auto">
+                          <div class="h5 mb-0 mr-3 font-weight-bold text-gray-800">{{ nb_dmdt }}</div>
+                        </div>
+
+                      </div>
+                    </div>
+                    <div class="col-auto">
+                      <i class="fas fa-archive fa-2x text-gray-300"></i>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            
+          </div>
+          
+          <br>
+          
+          </div>
+            
+
+          <!-- Content Row -->
+
+          
+
+          
+
+       {% endblock %}

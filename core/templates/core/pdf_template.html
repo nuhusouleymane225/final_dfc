@@ -1,0 +1,157 @@
+
+<html>
+
+	<head>
+		<style>
+			@page {
+				size: a4 portrait;
+				@frame header_frame {           /* Static Frame */
+					-pdf-frame-content: header_content;
+					left: 50pt; width: 512pt; top: 50pt; height: 40pt;
+				}
+				@frame content_frame {          /* Content Frame */
+					left: 50pt; width: 512pt; top: 90pt; height: 632pt;
+				}
+				@frame footer_frame {           /* Another static Frame */
+					-pdf-frame-content: footer_content;
+					left: 50pt; width: 512pt; top: 772pt; height: 20pt;
+				}
+			}
+			body {
+				font-size:10pt;
+			}
+		</style>
+	</head>
+	{% load static%}
+	<body>
+		<!-- Content for Static Frame 'header_frame' -->
+		<table style="width:100%" cellspacing="2px">
+			<tbody>
+				<tr>
+					<td scope="row" style=" text-align: left;">
+						<div id="header_content">
+							<u><h1 style="font-family: Times New Roman, Times, Copperplate; font-size: 19px;">Suivi Frais Exploitation &nbsp;</h1></u>
+						</div><span width="210px" height="100px">Date:{{texts.timestamp | date:"SHORT_DATE_FORMAT"}}</span>
+					</td>
+					<td> </td>
+					<td></td>
+					<td></td>
+					<td></td>
+					<td class="header_content"><img src="{%static 'polls/images/LogogroupeCentaure.png'%}" alt="Image" border="0" width="210px" height="100px"></td>
+				</tr>
+				<tr>
+					<td>
+						Numéro de relevé:
+					</td>
+					<td scope="row">
+						<div>
+							 <b>{{texts.id}}</b>
+						</div>
+					</td>
+					<td></td>
+					<td>Nom chauffeur:</b></td>
+					<td><b>{{texts.driver.nom_prenom}}</td>
+				</tr>
+				<tr>
+					<td>
+						 Code Chauffeur:
+					</td>
+					<td>
+						<b>{{texts.driver.code_matricule}}</b>
+					</td>
+					<td></td>
+					<td>Code remorque:</b></td>
+					<td><b>{{texts.code_remorque}}</td>
+
+				</tr>
+			</tbody>
+		</table>
+		
+		
+
+		<!-- Content for Static Frame 'footer_frame' -->
+		<div id="footer_content">(c) - page <pdf:pagenumber>
+			sur <pdf:pagecount>
+           
+		</div>
+
+		<!-- HTML Content -->
+		<table cellspacing="2px">
+				<tr>
+				
+					<td>Code véhicule:&nbsp;<b>{{texts.code_vehicule}}</b></td>
+					<td></td>
+					
+					<td>Imat. véhicule: <b>{{texts.imat_vehicule}}</b></td>
+					<td></td>
+					
+				</tr>
+				<tr>
+					<td>Imat. remorque:&nbsp;<b>{{texts.imat_remorque}}</b></td>
+					<td></td>
+				</tr>
+				<tr>
+					<td>Code Activité:&nbsp;<b>{{texts.activity}}</b></td>
+					<td></td>
+					
+				</tr>
+				
+		</table>
+
+		<hr>
+
+		<table cellspacing="10px">
+			<tr>
+	
+				<td><b>Date de frais</td></b>
+				
+				<td><b>Motifs</td></b>
+				<td><b>Quantité</td></b>
+				<td><b>Prix unitaire</td></b>
+				
+			</tr>
+			 {% for request_item in texts.get_reasons %}
+			<tr>
+               
+				<td class="text-center">{{request_item.request.date | date:"SHORT_DATE_FORMAT"}}</td>
+                
+				
+				<td>{{request_item.label}}</td>
+				<td>{{ request_item.quantity}}</td>
+				<td>{{ request_item.price}}F</td>
+
+				
+				
+			</tr>
+			{% endfor %}
+           
+			<tr>
+	
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+			</tr>
+			<tr>
+	
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+			</tr>
+		</table>
+
+		<hr>
+
+		<p><strong>Total: {{texts.get_total_price}}F</strong></p>
+		<p><strong>Code Analytique: {{texts.axe_analyse}}{{texts.activity}}{{texts.agency}}</strong></p>
+		
+		
+    
+
+	</body>
+</html>

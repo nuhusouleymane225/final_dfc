@@ -1,0 +1,199 @@
+{% extends 'core/base.html' %}
+
+{% block content %}
+
+{%load crispy_forms_tags %}
+
+
+<div class="container form-wrapper">
+    <form action="{% url 'create-fee-request' %}" method="POST"> {% csrf_token %}
+        {{ form | crispy }}
+
+        <div>
+            <div class="chips-container-header fw-bold">Total:
+                <span class="mx-1" id="reason-price">0</span><span>FCFA</span>
+            </div>
+            <div id="chips-container">
+
+            </div>
+            <div class="d-flex justify-content-end">
+                <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#reason-modal">
+                    Ajouter un motif
+                </button>
+            </div>
+            {% if has_reason_error %}
+                <div class="text-danger">Vous devez ajouter au minumum un motif</div>
+            {% endif %}
+            <hr>
+        </div>
+
+        <div class="d-grid gap-2">
+            <input style="width: 100%; margin-bottom: 30px;" type="submit" class="btn btn-primary d-block" value="Soumettre ma demande">
+        </div>
+    </form>
+</div>
+
+
+<div id="reason-modal" class="modal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Ajouter un motif</h5>
+
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <select id="reason-select" class="form-select" aria-label="Selection de motif">
+                    <option value="PEAGE">PEAGE</option>
+                    <option value="FRAIS TAXI">FRAIS DE TAXI</option>
+                    <option value="PESAGE">PESAGE</option>
+                    <option value="SBK">SEJOUR A BOUAKE</option>
+                </select>
+                <div class="form-floating my-3">
+                    <input id="reason-quantity" type="number" class="my-2 form-control" value="1">
+                    <label for="reason-quantity">Quantité</label>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">fermer</button>
+                <button type="button" id="btn-add-to-chips" class="btn btn-primary">enregistrer</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<style>
+
+    .form-wrapper {
+        width: 750px;
+    }
+
+    .chips {
+        box-sizing: border-box;
+        display: inline-block;
+        padding: 0.8em 1em;
+        background-color: #ff8f00;
+        color: #fff;
+        border-radius: 20px;
+        font-size: 0.8rem;
+        margin: 1em 0;
+    }
+
+    .chips-inner {
+        display: flex;
+        justify-content: center;
+        gap: 0.6rem;
+    }
+
+    .chips-inner svg {
+        fill: #fff;
+        width: 18px;
+        height: 18px;
+        cursor: pointer;
+        border-radius: 50%;
+    }
+
+    .chips-label {
+        display: inline-block;
+        font-weight: 500;
+    }
+</style>
+
+
+<script>
+    const chipsContainer = $('#chips-container');
+
+    const FEE_LABEL = {
+        'PESAGE': 'Pésage',
+        'PEAGE': 'Péage',
+        'SBK': 'Séjour à bouaké',
+        'FRAIS TAXI': 'Frais de taxi',
+    }
+
+    const FEE_PRICE = {
+        'PESAGE': 5000,
+        'PEAGE': 10000,
+        'SBK': 25000,
+        'FRAIS TAXI': 5000,
+    }
+
+    let reason_data = {
+        'PESAGE': 0,
+        'PEAGE': 0,
+        'SBK': 0,
+        'FRAIS TAXI': 0,
+    }
+
+
+    let reasonModal = $('#reason-modal');
+
+    let reasonTotalPrice = $('#reason-price');
+    let reasonSelect = $('#reason-select');
+    let reasonQuantity = $('#reason-quantity');
+
+    $("#btn-add-to-chips").click(function () {
+        const key = reasonSelect.val();
+        reason_data[key] = parseInt(reasonQuantity.val());
+        renderChips();
+        reasonModal.modal("hide");
+    });
+
+
+    function buildChip(label, quantity, key) {
+        const price = FEE_PRICE[key];
+        return (
+            `
+            <div class="chips">
+                    <div class="chips-inner">
+                        <span class="chips-label">${label} <span>(${price} FCFA x${quantity})</span></span>
+                        <svg class="reduce-chips" xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24"
+                             width="24px"
+                             fill="#000000">
+                            <path d="M0 0h24v24H0V0z" fill="none"/>
+                            <path d="M7 12c0 .55.45 1 1 1h8c.55 0 1-.45 1-1s-.45-1-1-1H8c-.55 0-1 .45-1 1zm5-10C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"/>
+                        </svg>
+                        <input type="hidden" name="${key}" value="${quantity}">
+                    </div>
+                </div>
+        `);
+
+
+    }
+
+    function renderChips() {
+        chipsContainer.empty();
+        for (const [key, quantity] of Object.entries(reason_data)) {
+            if (quantity > 0) {
+                const chipEl = buildChip(FEE_LABEL[key], quantity, key);
+                chipsContainer.append(chipEl);
+            }
+
+        }
+        renderTotalPrice();
+
+        $(".reduce-chips").click(function () {
+            const key = $(this).next().attr("name");
+
+            const currentValue = reason_data[key];
+
+            if (currentValue > 0) {
+                reason_data[key] = currentValue - 1;
+                renderChips();
+            }
+        });
+    }
+
+    function renderTotalPrice() {
+        let total = 0;
+        for (const [key, quantity] of Object.entries(reason_data)) {
+            total += (FEE_PRICE[key] * quantity);
+        }
+        reasonTotalPrice.text(total);
+    }
+
+
+</script>
+
+
+{% endblock content %}
